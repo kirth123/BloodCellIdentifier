@@ -1,0 +1,4 @@
+torch>=2.2
+medmnist>=3.0
+scikit-learn>=1.4
+matplotlib>=3.8
