@@ -21,8 +21,6 @@ classes. It uses MedMNIST's official train, validation, and test splits.
 The `data/`, `models/`, and `env/` directories are excluded from Git.
 
 ## Requirements
-
-- Windows
 - Python 3.11 or newer
 - Internet access on the first run to install dependencies and download
   BloodMNIST
