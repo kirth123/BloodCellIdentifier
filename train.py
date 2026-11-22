@@ -10,35 +10,9 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from torch import nn
 from torch.utils.data import DataLoader
 
+from model import SmallCNN
 
 # source of data: https://medmnist.com/
-
-class SmallCNN(nn.Module):
-    def __init__(self, num_classes: int) -> None:
-        super().__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=3, padding=1),
-            nn.BatchNorm2d(32),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(2),
-            nn.Conv2d(32, 64, kernel_size=3, padding=1),
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(2),
-            nn.Conv2d(64, 128, kernel_size=3, padding=1),
-            nn.BatchNorm2d(128),
-            nn.ReLU(inplace=True),
-            nn.AdaptiveAvgPool2d(1),
-        )
-        self.classifier = nn.Sequential(
-            nn.Flatten(),
-            nn.Dropout(0.3),
-            nn.Linear(128, num_classes),
-        )
-
-    def forward(self, images: torch.Tensor) -> torch.Tensor:
-        return self.classifier(self.features(images))
-
 
 def image_to_tensor(image: object) -> torch.Tensor:
     array = np.asarray(image, dtype=np.float32) / 255.0

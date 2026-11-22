@@ -13,6 +13,9 @@ classes. It uses MedMNIST's official train, validation, and test splits.
 |---|---|
 | `train.py` | Defines the CNN, trains it, selects the best checkpoint using validation accuracy, and reports test metrics. |
 | `inference.py` | Loads a saved checkpoint and predicts a cell type from an image file or a test-split sample. |
+| `app.py` | Gradio web interface for uploading and classifying a single-cell image. |
+| `model.py` | CNN architecture shared by training and prediction. |
+| `predictor.py` | Shared checkpoint loading and image preprocessing for web and CLI predictions. |
 | `requirements.txt` | Python package dependencies. |
 | `data/` | Downloaded BloodMNIST data; created automatically. |
 | `models/` | Saved model checkpoints; created automatically. |
@@ -120,7 +123,37 @@ also used for the final metrics printed by `train.py`.
 Optional inference arguments include `--checkpoint` and `--data-dir`. Use
 `python inference.py --help` to see all options.
 
-## Model overview
+## Try the web app locally
+
+Install the updated dependencies and start Gradio:
+
+```powershell
+python -m pip install -r requirements.txt
+python app.py
+```
+
+Open the local URL printed in the terminal (normally http://127.0.0.1:7860).
+Upload a cropped microscope image of a single blood cell, then click **Classify**
+to see the predicted class and probabilities for all eight classes. Use **Clear**
+to reset the input and result. Full blood-smear images are not supported.
+
+The app loads `models/best_model.pt` once at startup. If it is missing, run
+`python train.py`, then restart the app. You can also select an existing checkpoint:
+
+```powershell
+$env:BLOODCELL_CHECKPOINT = "D:\path\to\best_model.pt"
+python app.py
+```
+
+The web app uses the same RGB conversion, 28-by-28 resize, and pixel scaling as
+the command-line inference script. It does not train the model or download the
+dataset. The model always predicts one of its known classes, even for unrelated
+images. This is an educational demo, not a diagnostic tool.
+
+This command starts a local server without a public share link. For later hosting,
+include the trained checkpoint explicitly: `models/` is excluded from Git.
+
+## Model architecture
 
 The small CNN uses three convolutional blocks with 32, 64, and 128 feature
 channels. The first two blocks include max pooling, reducing a 28×28 image to
